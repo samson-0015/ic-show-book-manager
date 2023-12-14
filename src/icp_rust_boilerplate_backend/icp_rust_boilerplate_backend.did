@@ -1,0 +1,46 @@
+type Booking = record {
+  id : nat64;
+  num_tickets : nat32;
+  user_id : nat64;
+  show_id : nat64;
+};
+type BookingPayload = record {
+  num_tickets : nat32;
+  user_id : nat64;
+  show_id : nat64;
+};
+type Error = variant {
+  InvalidInput;
+  NotEnoughTickets;
+  NotFound : record { msg : text };
+};
+type Result = variant { Ok : Booking; Err : Error };
+type Result_1 = variant { Ok : Show; Err : Error };
+type Result_2 = variant { Ok : nat32; Err : Error };
+type Show = record {
+  id : nat64;
+  title : text;
+  available_tickets : nat32;
+  end_time : nat64;
+  start_time : nat64;
+  genre : text;
+  total_tickets : nat32;
+};
+type ShowPayload = record {
+  title : text;
+  end_time : nat64;
+  start_time : nat64;
+  genre : text;
+  total_tickets : nat32;
+};
+service : {
+  add_booking : (BookingPayload) -> (opt Booking);
+  add_show : (ShowPayload) -> (opt Show);
+  delete_booking : (nat64) -> (Result);
+  delete_show : (nat64) -> (Result_1);
+  get_booking : (nat64) -> (Result) query;
+  get_remaining_tickets : (nat64) -> (Result_2) query;
+  get_show : (nat64) -> (Result_1) query;
+  update_booking : (nat64, BookingPayload) -> (Result);
+  update_show : (nat64, ShowPayload) -> (Result_1);
+}

@@ -63,7 +63,6 @@ struct ShowPayload {
 struct Booking {
     id: u64,
     show_id: u64,
-    user_id: u64,
     num_tickets: u32,
 }
 
@@ -92,7 +91,6 @@ thread_local! {
 #[derive(candid::CandidType, Serialize, Deserialize, Default)]
 struct BookingPayload {
     show_id: u64,
-    user_id: u64,
     num_tickets: u32,
 }
 
@@ -212,7 +210,6 @@ fn add_booking(booking: BookingPayload) -> Option<Booking> {
     let booking = Booking {
         id,
         show_id: booking.show_id,
-        user_id: booking.user_id,
         num_tickets: booking.num_tickets,
     };
 
@@ -265,7 +262,6 @@ fn update_booking(id: u64, payload: BookingPayload) -> Result<Booking, Error> {
     // Update booking information
     let mut updated_booking = booking;
     updated_booking.show_id = payload.show_id;
-    updated_booking.user_id = payload.user_id;
     updated_booking.num_tickets = payload.num_tickets;
 
     // Update the booking in storage

@@ -1,13 +1,11 @@
 export const idlFactory = ({ IDL }) => {
   const BookingPayload = IDL.Record({
     'num_tickets' : IDL.Nat32,
-    'user_id' : IDL.Nat64,
     'show_id' : IDL.Nat64,
   });
   const Booking = IDL.Record({
     'id' : IDL.Nat64,
     'num_tickets' : IDL.Nat32,
-    'user_id' : IDL.Nat64,
     'show_id' : IDL.Nat64,
   });
   const ShowPayload = IDL.Record({

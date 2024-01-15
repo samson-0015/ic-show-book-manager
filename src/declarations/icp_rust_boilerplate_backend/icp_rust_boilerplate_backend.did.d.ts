@@ -4,14 +4,9 @@ import type { ActorMethod } from '@dfinity/agent';
 export interface Booking {
   'id' : bigint,
   'num_tickets' : number,
-  'user_id' : bigint,
   'show_id' : bigint,
 }
-export interface BookingPayload {
-  'num_tickets' : number,
-  'user_id' : bigint,
-  'show_id' : bigint,
-}
+export interface BookingPayload { 'num_tickets' : number, 'show_id' : bigint }
 export type Error = { 'InvalidInput' : null } |
   { 'NotEnoughTickets' : null } |
   { 'NotFound' : { 'msg' : string } };

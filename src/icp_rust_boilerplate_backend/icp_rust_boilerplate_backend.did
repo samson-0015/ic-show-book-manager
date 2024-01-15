@@ -1,14 +1,5 @@
-type Booking = record {
-  id : nat64;
-  num_tickets : nat32;
-  user_id : nat64;
-  show_id : nat64;
-};
-type BookingPayload = record {
-  num_tickets : nat32;
-  user_id : nat64;
-  show_id : nat64;
-};
+type Booking = record { id : nat64; num_tickets : nat32; show_id : nat64 };
+type BookingPayload = record { num_tickets : nat32; show_id : nat64 };
 type Error = variant {
   InvalidInput;
   NotEnoughTickets;

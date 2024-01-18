@@ -94,6 +94,18 @@ struct BookingPayload {
     num_tickets: u32,
 }
 
+#[derive(candid::CandidType, Deserialize, Serialize)]
+enum Error {
+    NotFound { msg: String },
+    NotEnoughTickets,
+    InvalidInput,
+}
+
+// a helper method to get a show by id. used in get_show/update_show
+fn _get_show(id: &u64) -> Option<Show> {
+    SHOW_STORAGE.with(|service| service.borrow().get(id))
+}
+
 #[ic_cdk::query]
 fn get_show(id: u64) -> Result<Show, Error> {
     match _get_show(&id) {
@@ -133,11 +145,11 @@ fn add_show(show: ShowPayload) -> Option<Show> {
 
 #[ic_cdk::update]
 fn update_show(id: u64, payload: ShowPayload) -> Result<Show, Error> {
-    match SHOW_STORAGE.with(|service| service.borrow().get(&id)) {
+    match SHOW_STORAGE.with(|service| service.borrow().get_mut(&id)) {
         Some(mut show) => {
             update_show_common(&mut show, &payload.total_tickets)?;
             do_insert_show(&show);
-            Ok(show)
+            Ok(show.clone())
         }
         None => Err(Error::NotFound {
             msg: format!(
@@ -166,22 +178,10 @@ fn delete_show(id: u64) -> Result<Show, Error> {
     }
 }
 
-#[derive(candid::CandidType, Deserialize, Serialize)]
-enum Error {
-    NotFound { msg: String },
-    NotEnoughTickets,
-    InvalidInput,
-}
-
-// a helper method to get a show by id. used in get_show/update_show
-fn _get_show(id: &u64) -> Option<Show> {
-    SHOW_STORAGE.with(|service| service.borrow().get(id))
-}
-
 #[ic_cdk::query]
 fn get_booking(id: u64) -> Result<Booking, Error> {
-    match _get_booking(&id) {
-        Some(booking) => Ok(booking),
+    match BOOKING_STORAGE.with(|service| service.borrow().get(&id)) {
+        Some(booking) => Ok(booking.clone()),
         None => Err(Error::NotFound {
             msg: format!("a booking with id={} not found", id),
         }),
